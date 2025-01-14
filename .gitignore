@@ -3,6 +3,50 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# General Rules for Visual Studio, Node, and IDEs
+# These are already present in your original file and are applied globally.
+
+# Spring project-specific rules (taskmanager)
+taskmanager/.gradle/
+taskmanager/.idea/
+taskmanager/build/
+taskmanager/out/
+taskmanager/*.log
+taskmanager/*.class
+taskmanager/*.iml
+taskmanager/.settings/
+taskmanager/.vscode/
+taskmanager/.history/
+taskmanager/src/main/resources/static/
+
+# Angular project-specific rules (taskmanager-frontend)
+taskmanager-frontend/.angular/cache/
+taskmanager-frontend/node_modules/
+taskmanager-frontend/dist/
+taskmanager-frontend/.vscode/
+taskmanager-frontend/tmp/
+taskmanager-frontend/out-tsc/
+taskmanager-frontend/.history/
+taskmanager-frontend/coverage/
+taskmanager-frontend/*.log
+
+# Global rules for temporary and generated files
+*.tmp
+*.bak
+*.swp
+*.lock
+*.pyc
+*.pyo
+*.sqlite3
+.DS_Store
+Thumbs.db
+
+# Ignore all `node_modules` globally as well
+**/node_modules/
+**/dist/
+**/tmp/
+
+
 # User-specific files
 *.rsuser
 *.suo

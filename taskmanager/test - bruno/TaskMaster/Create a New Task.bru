@@ -1,0 +1,15 @@
+meta {
+  name: Create a New Task
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/api/tasks
+  body: json
+  auth: none
+}
+
+body:json {
+  {}
+}

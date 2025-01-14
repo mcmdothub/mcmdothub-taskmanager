@@ -1,0 +1,17 @@
+meta {
+  name: Create a New Project
+  type: http
+  seq: 7
+}
+
+post {
+  url: http://localhost:8080/api/projects
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name":"Build a SPA with Java Spring and Angular"
+  }
+}
