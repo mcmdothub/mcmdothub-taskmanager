@@ -59,6 +59,14 @@
   </table>
 
   <div class="button-container">
-    <button>Add New Task</button>
+    <!-- We bind on click make "showModal" true -->
+    <button (click)="showModal = true">Add New Task</button>
   </div>
+
+  <!-- We show modal only if the button is clicked -->
+  @if(showModal) {
+    <!-- We want to bind to the closePanel event emitter (from inside TaskFormComponent)-->
+    <!-- When we receive an event from it we are going to say that our "showModal=false"-->
+    <app-task-form (closePanel)="showModal = false"></app-task-form>
+  }
 </div>

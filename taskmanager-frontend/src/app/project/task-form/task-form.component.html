@@ -1,0 +1,46 @@
+<div class="modal">
+  <div class="modal-content">
+    <!-- We bind it to "formGroup" of type "taskForm"-->
+    <!-- "[]" because we bind from the component to the template -->
+    <!-- We bind it to this event "(ngSubmit)" added to our system by forms module-->
+    <!-- "()" because we bind from the template to the component -->
+    <!-- we are binding to a method in the component called  "handleSubmit" -->
+    <form [formGroup]="taskForm" (ngSubmit)="handleSubmit()">
+<!--      <p>{{formType === "UPDATE" ? "Update task" : "Add new task"}}</p>-->
+      <div>
+        <label for="task-name">Task name</label>
+
+        <!-- This input has a "formControlName" of name: "name" -->
+        <input id="task-name" formControlName="name" />
+
+        <!-- Check for errors -->
+        @if(taskForm.get('name')?.invalid && taskForm.get('name')?.touched) {
+          <div>
+            Task name is required.
+          </div>
+        }
+
+      </div>
+      <div>
+        <label for="task-description">Task description</label>
+        <input id="task-description" formControlName="description" />
+      </div>
+      <div>
+        <label for="task-due-date">Task due date</label>
+        <input id="task-due-date" type="date" formControlName="dueDate" />
+        @if(taskForm.get('dueDate')?.invalid && taskForm.get('dueDate')?.touched) {
+          <div>
+            Due date is required
+          </div>
+        }
+
+      </div>
+      <div>
+        <button class="cancel-button" type="button">Cancel</button>
+
+        <!-- Check for errors: if is "invalid" i disable the "Submit" button -->
+        <button class="submit-button" type="submit" [disabled]="taskForm.invalid">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
