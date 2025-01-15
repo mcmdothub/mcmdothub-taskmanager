@@ -50,8 +50,11 @@
         <td>
           {{ task.dueDate | date : "YYYY-MM-dd" }}
         </td>
+        <td (click)="updateTask(task)">
+          ✏️
+        </td>
         <td (click)="deleteTask(task.id)">
-          x
+          ❌
         </td>
       </tr>
       }
@@ -67,6 +70,14 @@
   @if(showModal) {
     <!-- We want to bind to the closePanel event emitter (from inside TaskFormComponent)-->
     <!-- When we receive an event from it we are going to say that our "showModal=false"-->
-    <app-task-form (closePanel)="showModal = false"></app-task-form>
+    <!-- IMPORTANT: to bind them here you need to add "@Output" for "closePanel" inside "TaskFormComponent"-->
+    <!-- IMPORTANT: to bind them here you need to add "@Input" for "currentTask" & "formType" inside "TaskFormComponent"-->
+    <!-- We bind from the component "[]" the "currentTask" to be the "selectedTask"-->
+    <!-- We bind from the component "[]" the "formType" to be the "formType"-->
+    <app-task-form
+      (closePanel)="showModal = false"
+      [currentTask]="selectedTask"
+      [formType]="formType"
+    ></app-task-form>
   }
 </div>

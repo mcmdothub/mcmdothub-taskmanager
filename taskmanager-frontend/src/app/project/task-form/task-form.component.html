@@ -6,7 +6,8 @@
     <!-- "()" because we bind from the template to the component -->
     <!-- we are binding to a method in the component called  "handleSubmit" -->
     <form [formGroup]="taskForm" (ngSubmit)="handleSubmit()">
-<!--      <p>{{formType === "UPDATE" ? "Update task" : "Add new task"}}</p>-->
+      <!-- Change title in base of the "formType" -->
+      <p>{{formType === "UPDATE" ? "Update task" : "Add new task"}}</p>
       <div>
         <label for="task-name">Task name</label>
 
@@ -36,7 +37,7 @@
 
       </div>
       <div>
-        <button class="cancel-button" type="button">Cancel</button>
+        <button class="cancel-button" type="button" (click)="handleCancel()">Cancel</button>
 
         <!-- Check for errors: if is "invalid" i disable the "Submit" button -->
         <button class="submit-button" type="submit" [disabled]="taskForm.invalid">Submit</button>

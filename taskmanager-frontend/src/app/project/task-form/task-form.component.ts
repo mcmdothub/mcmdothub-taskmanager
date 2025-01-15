@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Output} from '@angular/core';
+import {Component, EventEmitter, inject, Input, Output, SimpleChanges} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { Task } from '../../task.model';
 import { TaskService } from '../../services/task.service';
@@ -10,7 +10,9 @@ import { TaskService } from '../../services/task.service';
   styleUrl: './task-form.component.css'
 })
 export class TaskFormComponent {
-  @Output() closePanel = new EventEmitter<'SUBMIT'>();
+  @Input() currentTask: Task | null = null;           // default value is null
+  @Input() formType: "CREATE" | "UPDATE" = "CREATE";  // default value is "CREATE"
+  @Output() closePanel = new EventEmitter<'SUBMIT' | 'CANCEL'>();
   // we define a taskForm
   taskForm: FormGroup;
 
@@ -27,6 +29,32 @@ export class TaskFormComponent {
     })
   }
 
+  // this will be triggered whenever a change happens inside the properties that are being
+  // passed into this component ( when the task changes)
+  ngOnChanges(changes: SimpleChanges) {
+    // if changes of "currentTask" && changes of "currentTask.currentValue" exists
+    if (changes['currentTask'] && changes['currentTask'].currentValue) {
+      // the task is going to be changes of "currentTask.currentValue"
+      const task = changes['currentTask'].currentValue as Task;
+
+      // because HTML form uses a date form which is string based
+      // we need to convert the date for now
+      // if "task.dueDate" exists then create a new Date object from it,
+      // turn it into a ISOString and then I want to remove the time
+      // remove the time means we'll split ir at the capital letter "T" and we'll take the first half of that
+      // so everything before the "T"
+      const dueDateFormatted = task.dueDate ? new Date(task.dueDate).toISOString().split("T")[0] : '';
+
+      // now we call "this.taskForm.patchValue"
+      // we patched in everything I just got: task & dueDate overwrite that to be my dueDateFormatted
+      this.taskForm.patchValue({
+        ...task,
+        dueDate: dueDateFormatted,
+      });
+    }
+
+  }
+
   handleSubmit() {
     // If the form is valid
     if(this.taskForm.valid) {
@@ -37,11 +65,23 @@ export class TaskFormComponent {
         // for the dueDate we need to cast it as a date, so we'll use the "Date" method,
         // and we'll use "this.taskForm.value.dueDate"
         dueDate: new Date(this.taskForm.value.dueDate),
-        // we'll set completed to false
-        completed: false,
+        // we'll set completed value
+        completed:
+          this.formType === 'UPDATE' ? this.taskForm.value.completed : false,
       }
-      this.taskService.addTask(newTask);
-      this.closePanel.emit('SUBMIT');
+
+      if (this.formType === 'CREATE') {
+        this.taskService.addTask(newTask);
+        this.closePanel.emit('SUBMIT');
+      } else {
+        this.taskService.updateTask(newTask);
+        this.closePanel.emit('SUBMIT');
+      }
     }
+  }
+
+  handleCancel() {
+    // we emit a "CANCEL" event
+    this.closePanel.emit('CANCEL');
   }
 }
