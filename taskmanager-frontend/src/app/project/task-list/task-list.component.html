@@ -1,67 +1,61 @@
 <div class="task-list-container">
-    <div class="heading">
-      <h3>Tasks</h3>
-      <div>
-        <span class="status-dot in-progress"></span>In Progress
-        <span class="status-dot completed"></span>Completed
-      </div>
+  <div class="heading">
+    <h3>Tasks</h3>
+    <div>
+      <span class="status-dot in-progress"></span>In Progress
+      <span class="status-dot completed"></span>Completed
     </div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Task</th>
+        <th>Status</th>
+        <th>Due Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- We keep track of this tasks if i order them or change them -->
+      <!-- so we are going to track the "task.id" that is unique for each task -->
+      @for (task of tasks; track task.id) {
+      <tr>
+        <td>
+          <!-- We bind the class -->
+          <!-- if "task.completed" is "true" add the class "completed-task" else do not add any class "" -->
+          <label class="{{ task.completed ? 'completed-task' : '' }}">
+            <!-- We bind the checked attribute using [] and we bind it to "checked" if the "task.completed" is true -->
+            <!-- otherwise we will not check the checkbox if "task.completed" is false -->
+            <input
+              type="checkbox"
+              aria-label="Select task"
+              [checked]="task.completed"
+              (click)="handleCheckbox(task.id)"
+            />{{ task.name }}
+          </label>
+        </td>
+        <td>
+          <!-- We bind the class -->
+          <!-- if "task.completed" is "true" add the class "completed" else add class "in-progress" -->
+          <span class="status-dot {{ task.completed ? 'completed' : 'in-progress' }}"></span>{{ task.completed ?
+          'Completed' : 'In Progress' }}
+        </td>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Task</th>
-                <th>Status</th>
-                <th>Due Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <label>
-                        <input type="checkbox" aria-label="Select task"/>
-                        Design wireframe
-                    </label>
-                </td>
-                <td>
-                    In Progress
-                </td>
-                <td>
-                    2025-01-01
-                </td>
-            </tr>
+        <!-- Without pipe will have this date: "Mon Jul 31 2023 02:00:00 GMT+0200 (Central European Summer Time)"-->
+        <!-- With pipe we have this date: "" -->
+        <!-- Add DatePipe to the imports inside your component -->
+        <!-- pipe means: take this value "task.dueDate" and process it as a "date"
+               and then i give you attributes on how i want it to display
+               "YYYY-MM-DD"
+          -->
+        <td>
+          {{ task.dueDate | date : "YYYY-MM-dd" }}
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
 
-            <tr>
-                <td>
-                    <label>
-                        <input type="checkbox" aria-label="Select task"/>
-                        Develop backend
-                    </label>
-                </td>
-                <td>
-                    In Progress
-                </td>
-                <td>
-                    2025-08-01
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    <label>
-                        <input type="checkbox" aria-label="Select task" checked/>
-                        Develop frontend
-                    </label>
-                </td>
-                <td>
-                    Completed
-                </td>
-                <td>
-                    2024-11-01
-                </td>
-            </tr>
-
-        </tbody>
-
-    </table>
-</div>>
+  <div class="button-container">
+    <button>Add New Task</button>
+  </div>
+</div>
