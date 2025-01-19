@@ -1,77 +1,38 @@
 import { Injectable } from '@angular/core';
 import { Task } from '../task.model';
+import { HttpClient } from '@angular/common/http';
+import {Observable} from 'rxjs';
+
+const BASE_URL = 'http://localhost:8080/api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
-  // we have this data: an array of task
-  tasks: Task[] = [
-    {
-      id: 1,
-      name: "Design wireframe",
-      description: "",
-      completed: false,
-      dueDate: new Date("2023-07-31"),
-      project: 1,
-    },
-    {
-      id: 2,
-      name: "Design frontend",
-      description: "",
-      completed: true,
-      dueDate: new Date("2023-06-15"),
-      project: 1,
-    },
-    {
-      id: 3,
-      name: "Implement backend",
-      description: "",
-      completed: false,
-      dueDate: new Date("2023-07-31"),
-      project: 1,
-    },
-    {
-      id: 4,
-      name: "Have a party",
-      description: "",
-      completed: true,
-      dueDate: new Date("2023-11-31"),
-      project: 1,
-    }
-  ];
-
-  constructor() { }
+  // Injecting HTTP Client
+  constructor(private http: HttpClient) { }
 
   // getTasks
-  getTasks() {
-    return this.tasks;
+  // will return an Observable which will resolve to an array of tasks
+  getTasks(): Observable<Task[]> {
+    return this.http.get<Task[]>(`${BASE_URL}/tasks`);
   }
 
   // addTask
   addTask(task: Task) {
-    this.tasks.push(task);
-    return this.tasks;
+    return this.http.post(`${BASE_URL}/tasks`, { ...task, project: null });
   }
 
   // updateTask
   updateTask(newTask: Task) {
-    // Find the Index inside array "this.tasks"
-    // And find the index where task as a "task.id" which matches our "newTask.id"
-    const taskIndex = this.tasks.findIndex((task) => task.id === newTask.id);
-
-    // Once we find that
-    this.tasks[taskIndex] = newTask;
-
-    return this.tasks;
+    return this.http.put(`${BASE_URL}/tasks/${newTask.id}`, {
+      ...newTask,
+      project: null,
+    });
   }
 
   // deleteTask
   deleteTask(id: number) {
-    const taskIndex = this.tasks.findIndex((task) => task.id === id);
-
-    // we remove 1 element with this "taskIndex" from array/list of "this.tasks"
-    this.tasks.splice(taskIndex, 1);
-    return this.tasks;
+    return this.http.delete(`${BASE_URL}/tasks/${id}`);
   }
 }

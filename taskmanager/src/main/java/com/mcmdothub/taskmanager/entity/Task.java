@@ -17,7 +17,7 @@ import java.time.LocalDate;
 // when JPA loads an entity from the database it uses a no argument constructor to create an instance
 // and then populates the fields with data retrieved from the database
 // my tasks are going to exist within projects
-@NoArgsConstructor
+//@NoArgsConstructor
 public class Task {
     // I want my Task to have some fields
     // Persistent entity 'Task' should have primary key so we add the annotation for the id "@Id"

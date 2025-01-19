@@ -43,7 +43,9 @@ export class TaskFormComponent {
       // turn it into a ISOString and then I want to remove the time
       // remove the time means we'll split ir at the capital letter "T" and we'll take the first half of that
       // so everything before the "T"
-      const dueDateFormatted = task.dueDate ? new Date(task.dueDate).toISOString().split("T")[0] : '';
+      const dueDateFormatted = task.dueDate
+        ? new Date(task.dueDate).toISOString().split('T')[0]
+        : '';
 
       // now we call "this.taskForm.patchValue"
       // we patched in everything I just got: task & dueDate overwrite that to be my dueDateFormatted
@@ -59,23 +61,28 @@ export class TaskFormComponent {
     // If the form is valid
     if(this.taskForm.valid) {
       // we create a newTask of type "Task"
+      // Create the new Task object
       const newTask: Task = {
         // we shall spread the fields that we got from the form
         ...this.taskForm.value,
         // for the dueDate we need to cast it as a date, so we'll use the "Date" method,
         // and we'll use "this.taskForm.value.dueDate"
-        dueDate: new Date(this.taskForm.value.dueDate),
+        dueDate: new Date(this.taskForm.value.dueDate).toISOString(), // Convert to ISO string
         // we'll set completed value
         completed:
           this.formType === 'UPDATE' ? this.taskForm.value.completed : false,
       }
 
       if (this.formType === 'CREATE') {
-        this.taskService.addTask(newTask);
-        this.closePanel.emit('SUBMIT');
+        // subscribe to the result of that request
+        // then we emit closePanel event
+        this.taskService.addTask(newTask).subscribe(() => {
+          this.closePanel.emit('SUBMIT');
+        });
       } else {
-        this.taskService.updateTask(newTask);
-        this.closePanel.emit('SUBMIT');
+        this.taskService.updateTask(newTask).subscribe(() => {
+          this.closePanel.emit('SUBMIT');
+        });
       }
     }
   }

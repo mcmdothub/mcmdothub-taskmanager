@@ -1,38 +1,48 @@
 import {Component, inject} from '@angular/core';
 import { Task } from '../../task.model';
-import { DatePipe } from '@angular/common';
+import {AsyncPipe, DatePipe} from '@angular/common';
 import { TaskService } from '../../services/task.service';
 import { TaskFormComponent } from '../task-form/task-form.component';
+import {Observable} from 'rxjs';
 
 // empty task is going to be an object with a name, description, etc
 const emptyTask = {
   id: 0,
-  name: "",
-  description: "",
-  completed: false,
+  name: '',
+  description: '',
   dueDate: new Date(),
-  project: 0
-}
+  completed: false,
+  project: 1,
+};
 
 @Component({
   selector: 'app-task-list',
-  imports: [DatePipe, TaskFormComponent],
+  imports: [DatePipe, TaskFormComponent, AsyncPipe],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.css'
 })
 export class TaskListComponent {
   // we have this data: an array of task
-  tasks: Task[];
-  showModal = false;
+  tasks: Task[] = [];
+  showModal: boolean = false;
   selectedTask: Task = emptyTask;  // default value an empty task
+
+  // We mark observables with "$"
+  // To fix this error: "TS2564: Property tasks$ has no initializer and is not definitely assigned in the constructor."
+  // add "!" because i know this observable will have a value
+  tasks$!: Observable<Task[]>;
 
   // keep track of form type
   formType: "CREATE" | "UPDATE" = "CREATE";   // default value is "CREATE"
 
-  private tasksService = inject(TaskService);
+  private taskService = inject(TaskService);
 
   constructor() {
-    this.tasks = this.tasksService.getTasks();
+    this.updateTasks();
+  }
+
+  updateTasks() {
+    this.tasks$ = this.taskService.getTasks();
   }
 
   // Dynamic change the status if I check / uncheck Task
@@ -44,7 +54,7 @@ export class TaskListComponent {
 
     const updatedTask = this.tasks[taskIndex];
     updatedTask.completed = !updatedTask.completed;
-    this.tasks = this.tasksService.updateTask(updatedTask);
+    this.taskService.updateTask(updatedTask);
   }
 
   updateTask(task: Task) {
@@ -59,7 +69,22 @@ export class TaskListComponent {
     this.showModal = true;
   }
 
+  addNewTask() {
+    this.selectedTask = emptyTask;
+    this.formType = 'CREATE';
+    this.showModal = true;
+  }
+
   deleteTask(id: number) {
-    this.tasks = this.tasksService.deleteTask(id);
+    this.taskService.deleteTask(id).subscribe(() => {
+      this.updateTasks();
+    });
+  }
+
+  handleModalClose(type: 'SUBMIT' | 'CANCEL') {
+    if (type === 'SUBMIT') {
+      this.updateTasks();
+    }
+    this.showModal = false;
   }
 }

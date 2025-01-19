@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,8 +24,8 @@ public class Project {
     // cascade = CascadeType.ALL mean that any changes made to tasks inside of this project will cascade to the task entity as well
     // orphanRemoval = true meaning any tasks that don't have a project will be removed
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Task> tasks;
+    //@JsonManagedReference
+    private List<Task> tasks = new ArrayList<>();
 
     // we'll give this entity the power to be able to add and remove tasks
     // we will have an addTask method that will add a task to the database
