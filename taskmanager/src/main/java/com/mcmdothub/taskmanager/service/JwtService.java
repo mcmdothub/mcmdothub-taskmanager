@@ -22,7 +22,7 @@ public class JwtService {
     private final String secretKey = "9f8974d2826991ccd165dfa0f940df5598704161b7a002a04fc471eca942e43d";
 
     // hard code the jwt expiration
-    // 1000 miliseconds * 60 seconds * 60 minutes * 24 hours * 365 days => so will last for 1 day
+    // 1000 milliseconds * 60 seconds * 60 minutes * 24 hours * 365 days => so will last for 1 day
     private final long jwtExpiration = 1000L * 60 * 60 * 24 * 365;
 
     // Get the Username
@@ -48,7 +48,7 @@ public class JwtService {
         // return something from the Jwts library, set the signing key
         // that needs to take the key using a method called "getSigningKey"
         // once we got that we build our parser
-        // once is build we will parse the claims and pass in the token
+        // once is build we will parse the claims and pass in the token,
         // and finally we will get the body
         return Jwts
                 .parserBuilder()
@@ -63,6 +63,7 @@ public class JwtService {
         // we are going to get an array of bytes called "keyBytes"
         // we use "Decoders" from decoders which comes with jsonwebtoken with this decoder "BASE64" and we pass in the "secretKey"
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+
         // return "Keys" from jsonwebtoken
         return Keys.hmacShaKeyFor(keyBytes);
     }
@@ -110,6 +111,6 @@ public class JwtService {
     }
 
     private Date extractExpiration(String token) {
-        return extractClaim(token, Claims:: getExpiration);
+        return extractClaim(token, Claims::getExpiration);
     }
 }

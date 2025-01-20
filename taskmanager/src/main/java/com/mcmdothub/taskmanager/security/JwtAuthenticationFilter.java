@@ -30,11 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // is going to take the request
     // and we're going to annotate that as "@NonNull"
     @Override
-    protected void doFilterInternal(
-            @NonNull HttpServletRequest request,
-            @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain
-    ) throws ServletException, IOException
+    protected void doFilterInternal(@NonNull  HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException
     {
         // the "authHeader" is in the header called "Authorization"
         final String authHeader = request.getHeader("Authorization");
@@ -56,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         userEmail = jwtService.extractUsername(jwt);
 
         // if we have already authenticated this request at some point during this request response cycle
-        if (userEmail == null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
             if(jwtService.isTokenValid(jwt, userDetails)) {
@@ -72,5 +68,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
+        filterChain.doFilter(request, response);
     }
 }
