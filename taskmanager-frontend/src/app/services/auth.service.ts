@@ -10,13 +10,13 @@ type TokenResponse = {
 }
 
 // We define the "RegisterRequest"
-type RegisterRequest = {
+export type RegisterRequest = {
   firstname: string;
   lastname: string;
   email: string;
   password: string;
-  role: "USER" | "ADMIN" | "MANAGER";
-}
+  role: 'USER' | 'ADMIN' | 'MANAGER';
+};
 
 
 @Injectable({
